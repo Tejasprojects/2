@@ -65,7 +65,7 @@ export const WalletConnect: React.FC = () => {
         explorerUrl = `https://mumbai.polygonscan.com/address/${account}`;
         break;
       default:
-        explorerUrl = `https://qwixscan.com/address/${account}`; // Custom explorer
+        explorerUrl = `https://qwixscan.com/address/${account}`;
         break;
     }
     
@@ -73,14 +73,22 @@ export const WalletConnect: React.FC = () => {
   };
 
   const handleConnectWallet = async () => {
+    if (!isWeb3Supported) {
+      toast({
+        title: "Web3 not supported",
+        description: "Please install a Web3 wallet like MetaMask or QwixMask.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
-      // Connect wallet using BlockchainContext
       await connectWallet();
     } catch (error) {
-      console.error("Error connecting to QwixMask:", error);
+      console.error("Error connecting to wallet:", error);
       toast({
         title: "Connection failed",
-        description: "Could not connect to QwixMask. Please try again.",
+        description: "Could not connect to your wallet. Please try again.",
         variant: "destructive"
       });
     }
@@ -96,7 +104,7 @@ export const WalletConnect: React.FC = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel>QwixMask Wallet</DropdownMenuLabel>
+          <DropdownMenuLabel>Web3 Wallet</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium mb-1">Account:</p>
@@ -104,7 +112,7 @@ export const WalletConnect: React.FC = () => {
           </div>
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium mb-1">Balance:</p>
-            <p className="text-xs text-muted-foreground">{balance} MATIC</p>
+            <p className="text-xs text-muted-foreground">{balance} ETH</p>
           </div>
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium mb-1">Network:</p>
@@ -124,11 +132,19 @@ export const WalletConnect: React.FC = () => {
     );
   }
 
-  // Web3 is always supported now with our fallback
+  if (!isWeb3Supported) {
+    return (
+      <Button variant="outline" className="flex items-center gap-2" disabled>
+        <AlertTriangle className="h-4 w-4" />
+        <span>Web3 Not Supported</span>
+      </Button>
+    );
+  }
+
   return (
     <Button onClick={handleConnectWallet} className="flex items-center gap-2">
       <Wallet className="h-4 w-4" />
-      <span>Connect QwixMask</span>
+      <span>Connect Wallet</span>
     </Button>
   );
 };
