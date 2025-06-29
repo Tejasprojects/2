@@ -84,6 +84,10 @@ export const WalletConnect: React.FC = () => {
 
     try {
       await connectWallet();
+      toast({
+        title: "Wallet connected",
+        description: "Your wallet has been successfully connected.",
+      });
     } catch (error) {
       console.error("Error connecting to wallet:", error);
       toast({

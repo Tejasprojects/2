@@ -15,6 +15,18 @@ interface ImportMeta {
 
 declare global {
   interface Window {
-    ethereum?: any;
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on: (event: string, callback: (accounts: string[]) => void) => void;
+      removeListener: (event: string, callback: (accounts: string[]) => void) => void;
+      selectedAddress: string | null;
+      chainId: string;
+      isMetaMask?: boolean;
+    };
+    web3?: any;
   }
+  
+  const globalThis: typeof global;
 }
+
+export {};
